@@ -1,0 +1,5 @@
+import {
+  "CYang-dep/moonosc" @osc,
+}
+
+pkgtype(kind: "executable")
