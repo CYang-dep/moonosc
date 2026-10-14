@@ -57,7 +57,7 @@ fn Writer::blob(self : Writer, bytes : Bytes) -> Unit raise OscError {
     raise Limit("blob bytes")
   }
   self.room(4 + bytes.length())
-  self.word(bytes.length().to_uint())
+  self.word(bytes.length().reinterpret_as_uint())
   for b in bytes {
     self.out.push(b)
   }
