@@ -132,3 +132,39 @@ pub fn validate_method(address : String) -> Unit raise OscError {
     }
   }
 }
+
+///|
+pub extend OscError with Eq::{equal, not_equal}
+
+///|
+pub extend OscError with @debug.Debug::{to_repr}
+
+///|
+pub extend TimeTag with Eq::{equal, not_equal}
+
+///|
+pub extend TimeTag with @debug.Debug::{to_repr}
+
+///|
+pub extend Argument with Eq::{equal, not_equal}
+
+///|
+pub extend Argument with @debug.Debug::{to_repr}
+
+///|
+pub extend Message with Eq::{equal, not_equal}
+
+///|
+pub extend Message with @debug.Debug::{to_repr}
+
+///|
+pub extend Packet with Eq::{equal, not_equal}
+
+///|
+pub extend Packet with @debug.Debug::{to_repr}
+
+///|
+pub extend Limits with Eq::{equal, not_equal}
+
+///|
+pub extend Limits with @debug.Debug::{to_repr}
