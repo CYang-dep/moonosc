@@ -1,0 +1,237 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "CYang-dep/moonosc"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn compile_pattern(String) -> Pattern raise OscError
+
+pub fn decode(Bytes, limits? : Limits) -> Packet raise OscError
+
+pub fn decode_message(Bytes, limits? : Limits) -> Message raise OscError
+
+pub fn double_argument(Double) -> Argument
+
+pub fn encode(Packet, limits? : Limits) -> Bytes raise OscError
+
+pub fn encode_message(Message, limits? : Limits) -> Bytes raise OscError
+
+pub fn flatten(Packet, TimeTag, limits? : Limits) -> Array[TimedMessage] raise OscError
+
+pub fn float_argument(Float) -> Argument
+
+pub fn from_json(Json, limits? : Limits) -> Packet raise OscError
+
+pub fn hex_decode(String, max_bytes? : Int) -> Bytes raise OscError
+
+pub fn hex_encode(Bytes, max_bytes? : Int) -> String raise OscError
+
+pub fn matches(String, String, work_limit? : Int) -> Bool raise OscError
+
+pub fn parse_json(String, limits? : Limits) -> Packet raise OscError
+
+pub fn size_frame(Bytes, max_frame? : Int) -> Bytes raise OscError
+
+pub fn slip_frame(Bytes, max_frame? : Int) -> Bytes raise OscError
+
+pub fn summarize(Packet, limits? : Limits) -> PacketSummary raise OscError
+
+pub fn to_json(Packet, limits? : Limits) -> Json raise OscError
+
+pub fn validate_address(String) -> Unit raise OscError
+
+pub fn validate_method(String) -> Unit raise OscError
+
+// Errors
+pub suberror OscError {
+  Invalid(String, Int)
+  Limit(String)
+} derive(Eq, @debug.Debug)
+pub fn OscError::equal(Self, Self) -> Bool
+pub fn OscError::not_equal(Self, Self) -> Bool
+pub fn OscError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub(all) enum Argument {
+  I32(Int)
+  F32(UInt)
+  Text(String)
+  Blob(Bytes)
+  I64(Int64)
+  F64(UInt64)
+  Time(TimeTag)
+  Symbol(String)
+  Character(Int)
+  Rgba(UInt)
+  Midi(UInt)
+  True
+  False
+  Nil
+  Impulse
+  Array(Array[Argument])
+} derive(Eq, @debug.Debug)
+pub fn Argument::equal(Self, Self) -> Bool
+pub fn Argument::not_equal(Self, Self) -> Bool
+pub fn Argument::to_repr(Self) -> @debug.Repr
+
+pub(all) struct DispatchPlan {
+  accepted : Array[Route]
+  rejected : Array[Rejection]
+} derive(Eq, @debug.Debug)
+pub fn DispatchPlan::equal(Self, Self) -> Bool
+pub fn DispatchPlan::not_equal(Self, Self) -> Bool
+pub fn DispatchPlan::to_repr(Self) -> @debug.Repr
+
+pub struct Dispatcher {
+  // private fields
+}
+pub fn Dispatcher::add(Self, Int, String, signature? : String?) -> Unit raise OscError
+pub fn Dispatcher::new(capacity? : Int) -> Self raise OscError
+pub fn Dispatcher::plan(Self, Message, all_or_nothing? : Bool, work_limit? : Int, limits? : Limits) -> DispatchPlan raise OscError
+
+pub(all) struct Limits {
+  packet_bytes : Int
+  string_bytes : Int
+  blob_bytes : Int
+  arguments : Int
+  elements : Int
+  depth : Int
+} derive(Eq, @debug.Debug)
+pub fn Limits::default() -> Self
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Message {
+  address : String
+  arguments : Array[Argument]
+} derive(Eq, @debug.Debug)
+pub fn Message::equal(Self, Self) -> Bool
+pub fn Message::not_equal(Self, Self) -> Bool
+pub fn Message::to_repr(Self) -> @debug.Repr
+pub fn Message::type_tags(Self, limits? : Limits) -> String raise OscError
+
+pub(all) enum Packet {
+  Message(Message)
+  Bundle(TimeTag, Array[Packet])
+} derive(Eq, @debug.Debug)
+pub fn Packet::equal(Self, Self) -> Bool
+pub fn Packet::not_equal(Self, Self) -> Bool
+pub fn Packet::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PacketSummary {
+  wire_bytes : Int
+  messages : Int
+  bundles : Int
+  arguments : Int
+  array_arguments : Int
+  blob_bytes : Int
+  max_depth : Int
+} derive(Eq, @debug.Debug)
+pub fn PacketSummary::equal(Self, Self) -> Bool
+pub fn PacketSummary::not_equal(Self, Self) -> Bool
+pub fn PacketSummary::to_repr(Self) -> @debug.Repr
+
+pub struct Pattern {
+  // private fields
+}
+pub fn Pattern::matches(Self, String, work_limit? : Int) -> Bool raise OscError
+pub fn Pattern::source(Self) -> String
+
+pub(all) struct Rejection {
+  route : Route
+  expected : String
+  actual : String
+} derive(Eq, @debug.Debug)
+pub fn Rejection::equal(Self, Self) -> Bool
+pub fn Rejection::not_equal(Self, Self) -> Bool
+pub fn Rejection::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Route {
+  id : Int
+  address : String
+} derive(Eq, @debug.Debug)
+pub fn Route::equal(Self, Self) -> Bool
+pub fn Route::not_equal(Self, Self) -> Bool
+pub fn Route::to_repr(Self) -> @debug.Repr
+
+pub struct Router {
+  // private fields
+}
+pub fn Router::add(Self, Int, String) -> Unit raise OscError
+pub fn Router::len(Self) -> Int
+pub fn Router::new(capacity? : Int) -> Self raise OscError
+pub fn Router::remove(Self, Int) -> Bool
+pub fn Router::resolve(Self, String, work_limit? : Int) -> Array[Route] raise OscError
+pub fn Router::snapshot(Self) -> Array[Route]
+
+pub(all) struct Scheduled {
+  ticket : UInt64
+  due : TimeTag
+  message : Message
+} derive(Eq, @debug.Debug)
+pub fn Scheduled::equal(Self, Self) -> Bool
+pub fn Scheduled::not_equal(Self, Self) -> Bool
+pub fn Scheduled::to_repr(Self) -> @debug.Repr
+
+pub struct Scheduler {
+  // private fields
+}
+pub fn Scheduler::cancel(Self, UInt64) -> Bool
+pub fn Scheduler::clear(Self) -> Int
+pub fn Scheduler::discard_before(Self, TimeTag) -> Array[Scheduled] raise OscError
+pub fn Scheduler::enqueue(Self, Packet, TimeTag, limits? : Limits) -> Array[UInt64] raise OscError
+pub fn Scheduler::len(Self) -> Int
+pub fn Scheduler::new(capacity? : Int) -> Self raise OscError
+pub fn Scheduler::next_due(Self) -> TimeTag?
+pub fn Scheduler::poll(Self, TimeTag, max_count? : Int) -> Array[Scheduled] raise OscError
+
+pub struct SizeFramer {
+  // private fields
+}
+pub fn SizeFramer::buffered(Self) -> Int
+pub fn SizeFramer::feed(Self, Bytes) -> Array[Bytes] raise OscError
+pub fn SizeFramer::finish(Self) -> Unit raise OscError
+pub fn SizeFramer::new(max_frame? : Int, max_feed? : Int, max_frames? : Int) -> Self raise OscError
+pub fn SizeFramer::reset(Self) -> Unit
+
+pub struct SlipFramer {
+  // private fields
+}
+pub fn SlipFramer::buffered(Self) -> Int
+pub fn SlipFramer::feed(Self, Bytes) -> Array[Bytes] raise OscError
+pub fn SlipFramer::finish(Self) -> Unit raise OscError
+pub fn SlipFramer::new(max_frame? : Int, max_feed? : Int, max_frames? : Int) -> Self raise OscError
+pub fn SlipFramer::reset(Self) -> Unit
+
+pub(all) struct TimeTag {
+  seconds : UInt
+  fraction : UInt
+} derive(Eq, @debug.Debug)
+pub fn TimeTag::add_ticks(Self, UInt64) -> Self raise OscError
+pub fn TimeTag::bits(Self) -> UInt64
+pub fn TimeTag::distance_ticks(Self, Self) -> UInt64 raise OscError
+pub fn TimeTag::equal(Self, Self) -> Bool
+pub fn TimeTag::from_bits(UInt64) -> Self
+pub fn TimeTag::from_unix(Int64, nanoseconds? : Int) -> Self raise OscError
+pub fn TimeTag::immediate() -> Self
+pub fn TimeTag::is_immediate(Self) -> Bool
+pub fn TimeTag::not_equal(Self, Self) -> Bool
+pub fn TimeTag::resolve(Self, Self) -> Self raise OscError
+pub fn TimeTag::to_repr(Self) -> @debug.Repr
+pub fn TimeTag::to_unix(Self) -> (Int64, Int) raise OscError
+
+pub(all) struct TimedMessage {
+  due : TimeTag
+  message : Message
+  order : Int
+} derive(Eq, @debug.Debug)
+pub fn TimedMessage::equal(Self, Self) -> Bool
+pub fn TimedMessage::not_equal(Self, Self) -> Bool
+pub fn TimedMessage::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
