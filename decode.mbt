@@ -10,7 +10,7 @@ fn decode_message_reader(
   if tags.length() == 0 || tags[0] != 44 {
     raise Invalid("missing type-tag comma", r.pos)
   }
-  let arguments = read_arguments(r, tags, Ref::new(1), 1, limits, budget, false)
+  let arguments = read_arguments(r, tags, Ref(1), 1, limits, budget, false)
   if r.pos != r.end {
     raise Invalid("trailing message bytes", r.pos)
   }
