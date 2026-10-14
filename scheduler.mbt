@@ -14,12 +14,12 @@ pub extend Scheduled with @debug.Debug::{to_repr}
 ///|
 pub struct Scheduler {
   priv heap : Array[Scheduled]
-  priv capacity : Int
+  priv capacity : Int32
   priv mut next_ticket : UInt64
 }
 
 ///|
-pub fn Scheduler::new(capacity? : Int = 4096) -> Scheduler raise OscError {
+pub fn Scheduler::new(capacity~ : Int32 = 4096) -> Scheduler raise OscError {
   if capacity < 1 || capacity > 65536 {
     raise Limit("queue capacity must be 1..65536")
   }
@@ -46,7 +46,7 @@ fn Scheduler::insert(self : Scheduler, event : Scheduled) -> Unit {
 }
 
 ///|
-fn Scheduler::sift_down(self : Scheduler, start : Int) -> Unit {
+fn Scheduler::sift_down(self : Scheduler, start : Int32) -> Unit {
   let mut i = start
   while i < self.heap.length() / 2 {
     let left = 2 * i + 1
@@ -82,7 +82,7 @@ pub fn Scheduler::enqueue(
   self : Scheduler,
   packet : Packet,
   now : TimeTag,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Array[UInt64] raise OscError {
   let events = flatten(packet, now, limits~)
   if events.length() > self.capacity - self.heap.length() {
@@ -105,7 +105,7 @@ pub fn Scheduler::enqueue(
 pub fn Scheduler::poll(
   self : Scheduler,
   now : TimeTag,
-  max_count? : Int = 4096,
+  max_count~ : Int32 = 4096,
 ) -> Array[Scheduled] raise OscError {
   if now.is_immediate() {
     raise Invalid("poll requires absolute now", 0)
@@ -124,7 +124,7 @@ pub fn Scheduler::poll(
 }
 
 ///|
-pub fn Scheduler::len(self : Scheduler) -> Int {
+pub fn Scheduler::len(self : Scheduler) -> Int32 {
   self.heap.length()
 }
 
@@ -186,7 +186,7 @@ pub fn Scheduler::discard_before(
 
 ///|
 /// Clear pending messages without recycling ticket identities.
-pub fn Scheduler::clear(self : Scheduler) -> Int {
+pub fn Scheduler::clear(self : Scheduler) -> Int32 {
   let count = self.heap.length()
   self.heap.clear()
   count

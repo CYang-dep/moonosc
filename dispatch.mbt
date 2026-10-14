@@ -1,7 +1,7 @@
 ///|
 pub fn Message::type_tags(
   self : Message,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> String raise OscError {
   limits.validate()
   let chars : Array[Char] = [',']
@@ -79,7 +79,7 @@ pub extend DispatchPlan with @debug.Debug::{to_repr}
 
 ///|
 priv struct Contract {
-  id : Int
+  id : Int32
   signature : String?
 }
 
@@ -90,16 +90,16 @@ pub struct Dispatcher {
 }
 
 ///|
-pub fn Dispatcher::new(capacity? : Int = 256) -> Dispatcher raise OscError {
+pub fn Dispatcher::new(capacity~ : Int32 = 256) -> Dispatcher raise OscError {
   { router: Router::new(capacity~), contracts: [], }
 }
 
 ///|
 pub fn Dispatcher::add(
   self : Dispatcher,
-  id : Int,
+  id : Int32,
   address : String,
-  signature? : String? = None,
+  signature~ : String? = None,
 ) -> Unit raise OscError {
   if signature is Some(s) {
     validate_signature(s)
@@ -112,9 +112,9 @@ pub fn Dispatcher::add(
 pub fn Dispatcher::plan(
   self : Dispatcher,
   message : Message,
-  all_or_nothing? : Bool = true,
-  work_limit? : Int = 1000000,
-  limits? : Limits = Limits::default(),
+  all_or_nothing~ : Bool = true,
+  work_limit~ : Int32 = 1000000,
+  limits~ : Limits = Limits::default(),
 ) -> DispatchPlan raise OscError {
   // Validate payloads as well as tag structure before admitting any destination.
   ignore(encode_message(message, limits~))

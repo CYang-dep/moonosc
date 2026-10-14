@@ -2,7 +2,7 @@
 pub(all) struct TimedMessage {
   due : TimeTag
   message : Message
-  order : Int
+  order : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -39,7 +39,7 @@ fn flatten_packet(
 pub fn flatten(
   packet : Packet,
   now : TimeTag,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Array[TimedMessage] raise OscError {
   if now.is_immediate() {
     raise Invalid("now must be absolute", 0)

@@ -64,7 +64,7 @@ fn encode_message_budget(
 ///|
 pub fn encode_message(
   message : Message,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Bytes raise OscError {
   limits.validate()
   encode_message_budget(message, limits, Budget::{ args: 0, nodes: 0, })

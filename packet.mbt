@@ -11,7 +11,7 @@ fn read_packet(
   r : Reader,
   limits : Limits,
   budget : Budget,
-  depth : Int,
+  depth : Int32,
 ) -> Packet raise OscError {
   if depth > limits.depth {
     raise Limit("bundle depth")
@@ -46,7 +46,7 @@ fn read_packet(
 ///|
 pub fn decode(
   bytes : Bytes,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Packet raise OscError {
   limits.validate()
   if bytes.length() > limits.packet_bytes {
@@ -68,7 +68,7 @@ fn write_packet(
   packet : Packet,
   limits : Limits,
   budget : Budget,
-  depth : Int,
+  depth : Int32,
 ) -> Bytes raise OscError {
   if depth > limits.depth {
     raise Limit("bundle depth")
@@ -97,7 +97,7 @@ fn write_packet(
 ///|
 pub fn encode(
   packet : Packet,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Bytes raise OscError {
   limits.validate()
   write_packet(packet, limits, Budget::{ args: 0, nodes: 0, }, 1)

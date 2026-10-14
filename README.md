@@ -78,7 +78,9 @@ python scripts/audit.py
 Repeat check/test/build/examples for wasm, js and native.
 Native execution requires a C toolchain (CI uses Ubuntu). CI installs the official
 stable toolchain on clean runners and tests all four targets. Local development
-was initially checked using Moon 0.1.20260920; CI logs record the actual release.
+was initially checked using Moon 0.1.20260920 and then migrated to the canonical
+Moon 0.1.20261012 syntax after the first real CI run. Use Moon 0.1.20261012
+or newer; CI logs record the actual release.
 
 The test suite includes 256 full-model roundtrips with every shortened message
 prefix rejected, 240 wildcard pairs against a recursive short-input oracle,

@@ -1,9 +1,9 @@
 ///|
 priv enum PatternAtom {
-  Literal(Int)
+  Literal(Int32)
   Any
   Star
-  Class(Bool, Array[(Int, Int)])
+  Class(Bool, Array[(Int32, Int32)])
   Choices(Array[String])
 }
 
@@ -19,14 +19,17 @@ pub fn Pattern::source(self : Pattern) -> String {
 }
 
 ///|
-fn parse_class(text : String, cursor : Ref[Int]) -> PatternAtom raise OscError {
+fn parse_class(
+  text : String,
+  cursor : Ref[Int32],
+) -> PatternAtom raise OscError {
   let start = cursor.val
   cursor.val += 1
   let negated = cursor.val < text.length() && text[cursor.val] == 33
   if negated {
     cursor.val += 1
   }
-  let ranges : Array[(Int, Int)] = []
+  let ranges : Array[(Int32, Int32)] = []
   while cursor.val < text.length() && text[cursor.val] != 93 {
     let lo = text[cursor.val].to_int()
     cursor.val += 1
@@ -55,7 +58,7 @@ fn parse_class(text : String, cursor : Ref[Int]) -> PatternAtom raise OscError {
 ///|
 fn parse_choices(
   text : String,
-  cursor : Ref[Int],
+  cursor : Ref[Int32],
 ) -> PatternAtom raise OscError {
   let start = cursor.val
   cursor.val += 1

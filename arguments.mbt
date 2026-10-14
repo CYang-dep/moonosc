@@ -1,7 +1,7 @@
 ///|
 priv struct Budget {
-  mut args : Int
-  mut nodes : Int
+  mut args : Int32
+  mut nodes : Int32
 }
 
 ///|
@@ -16,8 +16,8 @@ fn Budget::argument(self : Budget, limits : Limits) -> Unit raise OscError {
 fn read_arguments(
   r : Reader,
   tags : String,
-  cursor : Ref[Int],
-  depth : Int,
+  cursor : Ref[Int32],
+  depth : Int32,
   limits : Limits,
   budget : Budget,
   nested : Bool,
@@ -74,7 +74,7 @@ fn read_arguments(
 fn collect_tags(
   args : Array[Argument],
   tags : Array[Char],
-  depth : Int,
+  depth : Int32,
   limits : Limits,
   budget : Budget,
 ) -> Unit raise OscError {

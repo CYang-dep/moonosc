@@ -20,7 +20,7 @@ fn decode_message_reader(
 ///|
 pub fn decode_message(
   bytes : Bytes,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Message raise OscError {
   limits.validate()
   if bytes.length() > limits.packet_bytes {

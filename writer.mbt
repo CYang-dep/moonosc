@@ -5,14 +5,14 @@ priv struct Writer {
 }
 
 ///|
-fn Writer::room(self : Writer, count : Int) -> Unit raise OscError {
+fn Writer::room(self : Writer, count : Int32) -> Unit raise OscError {
   if count < 0 || count > self.limits.packet_bytes - self.out.length() {
     raise Limit("encoded packet bytes")
   }
 }
 
 ///|
-fn Writer::word(self : Writer, value : UInt) -> Unit raise OscError {
+fn Writer::word(self : Writer, value : UInt32) -> Unit raise OscError {
   self.room(4)
   for shift in [24, 16, 8, 0] {
     self.out.push((value >> shift).to_byte())
@@ -27,7 +27,7 @@ fn Writer::wide(self : Writer, value : UInt64) -> Unit raise OscError {
 }
 
 ///|
-fn Writer::padding(self : Writer, size : Int) -> Unit raise OscError {
+fn Writer::padding(self : Writer, size : Int32) -> Unit raise OscError {
   let n = (4 - size % 4) % 4
   self.room(n)
   for _ in 0..<n {

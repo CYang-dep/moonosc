@@ -2,16 +2,16 @@
 /// Size-prefix framing only: returned frames still require decode().
 pub struct SizeFramer {
   priv mut pending : Array[Byte]
-  priv max_frame : Int
-  priv max_feed : Int
-  priv max_frames : Int
+  priv max_frame : Int32
+  priv max_feed : Int32
+  priv max_frames : Int32
 }
 
 ///|
 pub fn SizeFramer::new(
-  max_frame? : Int = 1048576,
-  max_feed? : Int = 16777216,
-  max_frames? : Int = 4096,
+  max_frame~ : Int32 = 1048576,
+  max_feed~ : Int32 = 16777216,
+  max_frames~ : Int32 = 4096,
 ) -> SizeFramer raise OscError {
   if max_frame < 4 ||
     max_frame > 16777216 ||
@@ -81,7 +81,7 @@ pub fn SizeFramer::finish(self : SizeFramer) -> Unit raise OscError {
 }
 
 ///|
-pub fn SizeFramer::buffered(self : SizeFramer) -> Int {
+pub fn SizeFramer::buffered(self : SizeFramer) -> Int32 {
   self.pending.length()
 }
 
@@ -93,7 +93,7 @@ pub fn SizeFramer::reset(self : SizeFramer) -> Unit {
 ///|
 pub fn size_frame(
   bytes : Bytes,
-  max_frame? : Int = 1048576,
+  max_frame~ : Int32 = 1048576,
 ) -> Bytes raise OscError {
   if max_frame < 4 || max_frame > 16777216 {
     raise Limit("invalid frame budget")

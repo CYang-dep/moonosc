@@ -1,19 +1,19 @@
 ///|
 priv struct Reader {
   data : Bytes
-  mut pos : Int
-  end : Int
+  mut pos : Int32
+  end : Int32
 }
 
 ///|
-fn Reader::need(self : Reader, n : Int) -> Unit raise OscError {
+fn Reader::need(self : Reader, n : Int32) -> Unit raise OscError {
   if n < 0 || n > self.end - self.pos {
     raise Invalid("truncated payload", self.pos)
   }
 }
 
 ///|
-fn Reader::word(self : Reader) -> UInt raise OscError {
+fn Reader::word(self : Reader) -> UInt32 raise OscError {
   self.need(4)
   let p = self.pos
   self.pos += 4
@@ -31,7 +31,7 @@ fn Reader::wide(self : Reader) -> UInt64 raise OscError {
 }
 
 ///|
-fn Reader::padding(self : Reader, size : Int) -> Unit raise OscError {
+fn Reader::padding(self : Reader, size : Int32) -> Unit raise OscError {
   let n = (4 - size % 4) % 4
   self.need(n)
   for _ in 0..<n {

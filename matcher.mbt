@@ -1,5 +1,5 @@
 ///|
-fn spend(work : Ref[Int], limit : Int) -> Unit raise OscError {
+fn spend(work : Ref[Int32], limit : Int32) -> Unit raise OscError {
   if work.val >= limit {
     raise Limit("pattern work budget")
   }
@@ -11,8 +11,8 @@ fn spend(work : Ref[Int], limit : Int) -> Unit raise OscError {
 fn Pattern::match_budget(
   self : Pattern,
   path : String,
-  work_limit : Int,
-  work : Ref[Int],
+  work_limit : Int32,
+  work : Ref[Int32],
 ) -> Bool raise OscError {
   validate_method(path)
   if path.length() > 4096 {
@@ -90,7 +90,7 @@ fn Pattern::match_budget(
 pub fn matches(
   pattern : String,
   path : String,
-  work_limit? : Int = 1000000,
+  work_limit~ : Int32 = 1000000,
 ) -> Bool raise OscError {
   compile_pattern(pattern).matches(path, work_limit~)
 }
@@ -99,7 +99,7 @@ pub fn matches(
 pub fn Pattern::matches(
   self : Pattern,
   path : String,
-  work_limit? : Int = 1000000,
+  work_limit~ : Int32 = 1000000,
 ) -> Bool raise OscError {
   self.match_budget(path, work_limit, Ref(0))
 }

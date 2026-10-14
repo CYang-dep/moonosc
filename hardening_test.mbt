@@ -36,7 +36,7 @@ test "256 deterministic roundtrips and every truncated message prefix" {
 }
 
 ///|
-fn tiny_oracle(pattern : String, path : String, i : Int, j : Int) -> Bool {
+fn tiny_oracle(pattern : String, path : String, i : Int32, j : Int32) -> Bool {
   if i == pattern.length() {
     return j == path.length()
   }
@@ -71,7 +71,7 @@ test "wildcard DP agrees with a short recursive oracle on 240 pairs" {
 test "512 queue mutations agree with a scan-based reference model" {
   let q = @moonosc.Scheduler::new(capacity=1024)
   let now = @moonosc.TimeTag::from_unix(0L)
-  let pending : Array[(UInt64, Int)] = []
+  let pending : Array[(UInt64, Int32)] = []
   let mut seed = 12345U
   for step in 0..<512 {
     seed = seed * 1664525U + 1013904223U

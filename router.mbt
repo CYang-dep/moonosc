@@ -1,6 +1,6 @@
 ///|
 pub(all) struct Route {
-  id : Int
+  id : Int32
   address : String
 } derive(Eq, Debug)
 
@@ -13,11 +13,11 @@ pub extend Route with @debug.Debug::{to_repr}
 ///|
 pub struct Router {
   priv routes : Array[Route]
-  priv capacity : Int
+  priv capacity : Int32
 }
 
 ///|
-pub fn Router::new(capacity? : Int = 256) -> Router raise OscError {
+pub fn Router::new(capacity~ : Int32 = 256) -> Router raise OscError {
   if capacity < 1 || capacity > 4096 {
     raise Limit("route capacity must be 1..4096")
   }
@@ -27,7 +27,7 @@ pub fn Router::new(capacity? : Int = 256) -> Router raise OscError {
 ///|
 pub fn Router::add(
   self : Router,
-  id : Int,
+  id : Int32,
   address : String,
 ) -> Unit raise OscError {
   validate_method(address)
@@ -49,7 +49,7 @@ pub fn Router::add(
 }
 
 ///|
-pub fn Router::remove(self : Router, id : Int) -> Bool {
+pub fn Router::remove(self : Router, id : Int32) -> Bool {
   for i in 0..<self.routes.length() {
     if self.routes[i].id == id {
       ignore(self.routes.remove(i))
@@ -65,7 +65,7 @@ pub fn Router::snapshot(self : Router) -> Array[Route] {
 }
 
 ///|
-pub fn Router::len(self : Router) -> Int {
+pub fn Router::len(self : Router) -> Int32 {
   self.routes.length()
 }
 
@@ -74,7 +74,7 @@ pub fn Router::len(self : Router) -> Int {
 pub fn Router::resolve(
   self : Router,
   address : String,
-  work_limit? : Int = 1000000,
+  work_limit~ : Int32 = 1000000,
 ) -> Array[Route] raise OscError {
   let pattern = compile_pattern(address)
   let work = Ref(0)

@@ -3,16 +3,16 @@
 pub struct SlipFramer {
   priv mut pending : Array[Byte]
   priv mut escaped : Bool
-  priv max_frame : Int
-  priv max_feed : Int
-  priv max_frames : Int
+  priv max_frame : Int32
+  priv max_feed : Int32
+  priv max_frames : Int32
 }
 
 ///|
 pub fn SlipFramer::new(
-  max_frame? : Int = 1048576,
-  max_feed? : Int = 16777216,
-  max_frames? : Int = 4096,
+  max_frame~ : Int32 = 1048576,
+  max_feed~ : Int32 = 16777216,
+  max_frames~ : Int32 = 4096,
 ) -> SlipFramer raise OscError {
   if max_frame < 4 ||
     max_frame > 16777216 ||
@@ -79,7 +79,7 @@ pub fn SlipFramer::finish(self : SlipFramer) -> Unit raise OscError {
 }
 
 ///|
-pub fn SlipFramer::buffered(self : SlipFramer) -> Int {
+pub fn SlipFramer::buffered(self : SlipFramer) -> Int32 {
   self.pending.length()
 }
 
@@ -93,7 +93,7 @@ pub fn SlipFramer::reset(self : SlipFramer) -> Unit {
 /// Adds leading and trailing END for synchronization; worst case 2*n+2 bytes.
 pub fn slip_frame(
   bytes : Bytes,
-  max_frame? : Int = 1048576,
+  max_frame~ : Int32 = 1048576,
 ) -> Bytes raise OscError {
   if max_frame < 4 || max_frame > 16777216 || bytes.length() > max_frame {
     raise Limit("SLIP frame bytes")

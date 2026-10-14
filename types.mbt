@@ -1,28 +1,28 @@
 ///|
 pub suberror OscError {
-  Invalid(String, Int)
+  Invalid(String, Int32)
   Limit(String)
 } derive(Debug, Eq)
 
 ///|
 pub(all) struct TimeTag {
-  seconds : UInt
-  fraction : UInt
+  seconds : UInt32
+  fraction : UInt32
 } derive(Debug, Eq)
 
 ///|
 pub(all) enum Argument {
-  I32(Int)
-  F32(UInt)
+  I32(Int32)
+  F32(UInt32)
   Text(String)
   Blob(Bytes)
   I64(Int64)
   F64(UInt64)
   Time(TimeTag)
   Symbol(String)
-  Character(Int)
-  Rgba(UInt)
-  Midi(UInt)
+  Character(Int32)
+  Rgba(UInt32)
+  Midi(UInt32)
   True
   False
   Nil
@@ -44,12 +44,12 @@ pub(all) enum Packet {
 
 ///|
 pub(all) struct Limits {
-  packet_bytes : Int
-  string_bytes : Int
-  blob_bytes : Int
-  arguments : Int
-  elements : Int
-  depth : Int
+  packet_bytes : Int32
+  string_bytes : Int32
+  blob_bytes : Int32
+  arguments : Int32
+  elements : Int32
+  depth : Int32
 } derive(Debug, Eq)
 
 ///|

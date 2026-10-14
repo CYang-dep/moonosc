@@ -1,5 +1,5 @@
 ///|
-fn word_hex(value : UInt) -> String raise OscError {
+fn word_hex(value : UInt32) -> String raise OscError {
   let w = Writer::{ out: [], limits: Limits::default(), }
   w.word(value)
   hex_encode(Bytes::from_array(w.out))
@@ -65,7 +65,7 @@ fn packet_json(packet : Packet) -> Json raise OscError {
 /// never JSON numbers: NaN payloads, signed zero and all 64-bit values survive.
 pub fn to_json(
   packet : Packet,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Json raise OscError {
   let validated = decode(encode(packet, limits~), limits~)
   @json.to_json([@json.to_json("moonosc/1"), packet_json(validated)])
@@ -88,7 +88,7 @@ fn json_string(value : Json) -> String raise OscError {
 }
 
 ///|
-fn parse_hex_word(text : String) -> UInt raise OscError {
+fn parse_hex_word(text : String) -> UInt32 raise OscError {
   if text.length() != 8 {
     raise Invalid("expected 8 hex digits", 0)
   }
@@ -108,7 +108,7 @@ fn parse_hex_wide(text : String) -> UInt64 raise OscError {
 ///|
 fn argument_from_json(
   value : Json,
-  depth : Int,
+  depth : Int32,
   limits : Limits,
   budget : Budget,
 ) -> Argument raise OscError {
@@ -181,7 +181,7 @@ fn argument_from_json(
 ///|
 fn packet_from_json(
   value : Json,
-  depth : Int,
+  depth : Int32,
   limits : Limits,
   budget : Budget,
 ) -> Packet raise OscError {
@@ -227,7 +227,7 @@ fn packet_from_json(
 ///|
 pub fn from_json(
   value : Json,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Packet raise OscError {
   limits.validate()
   let root = json_array(value)
@@ -248,7 +248,7 @@ pub fn from_json(
 #warnings("-20")
 pub fn parse_json(
   text : String,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> Packet raise OscError {
   limits.validate()
   if text.length() > limits.packet_bytes * 4 + 65536 {

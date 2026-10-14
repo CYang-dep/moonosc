@@ -22,7 +22,7 @@ pub fn TimeTag::from_bits(bits : UInt64) -> TimeTag {
 /// Era 0 only, floors nanoseconds to the preceding 2^-32-second tick.
 pub fn TimeTag::from_unix(
   seconds : Int64,
-  nanoseconds? : Int = 0,
+  nanoseconds~ : Int32 = 0,
 ) -> TimeTag raise OscError {
   if seconds < -2208988800L || seconds > 2085978495L {
     raise Invalid("Unix seconds outside NTP era 0", 0)
@@ -41,7 +41,7 @@ pub fn TimeTag::from_unix(
 }
 
 ///|
-pub fn TimeTag::to_unix(self : TimeTag) -> (Int64, Int) raise OscError {
+pub fn TimeTag::to_unix(self : TimeTag) -> (Int64, Int32) raise OscError {
   if self.is_immediate() {
     raise Invalid("immediate is not an absolute timestamp", 0)
   }

@@ -1,5 +1,5 @@
 ///|
-fn hex_digit(code : Int) -> Int? {
+fn hex_digit(code : Int32) -> Int32? {
   if code >= 48 && code <= 57 {
     Some(code - 48)
   } else if code >= 65 && code <= 70 {
@@ -14,7 +14,7 @@ fn hex_digit(code : Int) -> Int? {
 ///|
 pub fn hex_decode(
   text : String,
-  max_bytes? : Int = 1048576,
+  max_bytes~ : Int32 = 1048576,
 ) -> Bytes raise OscError {
   if max_bytes < 0 || max_bytes > 16777216 {
     raise Limit("hex budget")
@@ -45,7 +45,7 @@ pub fn hex_decode(
 ///|
 pub fn hex_encode(
   bytes : Bytes,
-  max_bytes? : Int = 1048576,
+  max_bytes~ : Int32 = 1048576,
 ) -> String raise OscError {
   if max_bytes < 0 || max_bytes > 16777216 || bytes.length() > max_bytes {
     raise Limit("hex input bytes")
@@ -61,13 +61,13 @@ pub fn hex_encode(
 
 ///|
 pub(all) struct PacketSummary {
-  wire_bytes : Int
-  messages : Int
-  bundles : Int
-  arguments : Int
-  array_arguments : Int
-  blob_bytes : Int
-  max_depth : Int
+  wire_bytes : Int32
+  messages : Int32
+  bundles : Int32
+  arguments : Int32
+  array_arguments : Int32
+  blob_bytes : Int32
+  max_depth : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -78,12 +78,12 @@ pub extend PacketSummary with @debug.Debug::{to_repr}
 
 ///|
 priv struct SummaryBuilder {
-  mut messages : Int
-  mut bundles : Int
-  mut arguments : Int
-  mut arrays : Int
-  mut blobs : Int
-  mut depth : Int
+  mut messages : Int32
+  mut bundles : Int32
+  mut arguments : Int32
+  mut arrays : Int32
+  mut blobs : Int32
+  mut depth : Int32
 }
 
 ///|
@@ -105,7 +105,7 @@ fn SummaryBuilder::argument(self : SummaryBuilder, arg : Argument) -> Unit {
 fn SummaryBuilder::packet(
   self : SummaryBuilder,
   packet : Packet,
-  depth : Int,
+  depth : Int32,
 ) -> Unit {
   if depth > self.depth {
     self.depth = depth
@@ -130,7 +130,7 @@ fn SummaryBuilder::packet(
 /// First validates all budgets; never inspect untrusted models recursively first.
 pub fn summarize(
   packet : Packet,
-  limits? : Limits = Limits::default(),
+  limits~ : Limits = Limits::default(),
 ) -> PacketSummary raise OscError {
   let wire = encode(packet, limits~)
   let owned = decode(wire, limits~)
