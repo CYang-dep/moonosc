@@ -50,7 +50,7 @@ pub fn hex_encode(
   if max_bytes < 0 || max_bytes > 16777216 || bytes.length() > max_bytes {
     raise Limit("hex input bytes")
   }
-  let out = StringBuilder::new()
+  let out = StringBuilder()
   let digits = "0123456789abcdef"
   for b in bytes {
     out.write_char(digits[b.to_int() / 16].to_int().to_char().unwrap())
