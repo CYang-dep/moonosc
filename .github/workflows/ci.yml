@@ -1,0 +1,42 @@
+name: portable-validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [wasm-gc, wasm, js, native]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install official stable MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Record toolchain
+        run: moon version --all
+      - name: Verify interfaces and formatting
+        run: |
+          moon info
+          moon fmt --check
+          git diff --exit-code -- '*.mbti'
+      - name: Strict check, test and build
+        run: |
+          moon check --deny-warn --target ${{ matrix.target }}
+          moon test --deny-warn --target ${{ matrix.target }}
+          moon build --deny-warn --target ${{ matrix.target }}
+      - name: Run three integrations
+        run: |
+          moon run examples/audio --target ${{ matrix.target }}
+          moon run examples/media --target ${{ matrix.target }}
+          moon run examples/device --target ${{ matrix.target }}
+      - name: Independent wire oracle and source audit
+        run: |
+          python3 scripts/reference_vectors.py --target ${{ matrix.target }}
+          python3 scripts/audit.py
