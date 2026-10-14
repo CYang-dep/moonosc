@@ -136,3 +136,58 @@ pub fn Scheduler::next_due(self : Scheduler) -> TimeTag? {
     Some(self.heap[0].due)
   }
 }
+
+///|
+/// Cancel one ticket. Removing a non-root node restores the heap in both directions.
+pub fn Scheduler::cancel(self : Scheduler, ticket : UInt64) -> Bool {
+  let mut index = -1
+  for i in 0..<self.heap.length() {
+    if self.heap[i].ticket == ticket {
+      index = i
+      break
+    }
+  }
+  if index < 0 {
+    return false
+  }
+  let last = self.heap.pop().unwrap()
+  if index < self.heap.length() {
+    self.heap[index] = last
+    let mut i = index
+    while i > 0 {
+      let parent = (i - 1) / 2
+      if !earlier(self.heap[i], self.heap[parent]) {
+        break
+      }
+      self.heap.swap(i, parent)
+      i = parent
+    }
+    self.sift_down(i)
+  }
+  true
+}
+
+///|
+/// Explicit late-event policy: discard events strictly before cutoff, returning them
+/// in stable order. Equality is retained. Validation happens before any mutation.
+pub fn Scheduler::discard_before(
+  self : Scheduler,
+  cutoff : TimeTag,
+) -> Array[Scheduled] raise OscError {
+  if cutoff.is_immediate() {
+    raise Invalid("cutoff requires absolute time", 0)
+  }
+  let out : Array[Scheduled] = []
+  while !self.heap.is_empty() && self.heap[0].due.bits() < cutoff.bits() {
+    out.push(self.take())
+  }
+  out
+}
+
+///|
+/// Clear pending messages without recycling ticket identities.
+pub fn Scheduler::clear(self : Scheduler) -> Int {
+  let count = self.heap.length()
+  self.heap.clear()
+  count
+}
