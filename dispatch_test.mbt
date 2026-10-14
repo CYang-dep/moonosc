@@ -1,5 +1,5 @@
 ///|
-test "typed dispatch supports atomic and partial admission" {
+test "typed dispatch supports all_or_nothing and partial admission" {
   let d = @moonosc.Dispatcher::new()
   d.add(1, "/synth/a", signature=Some(",f"))
   d.add(2, "/synth/b", signature=Some(",i"))
@@ -10,7 +10,7 @@ test "typed dispatch supports atomic and partial admission" {
   let p = d.plan(m)
   assert_eq(p.accepted.length(), 0)
   assert_eq(p.rejected[0].route.id, 1)
-  assert_eq(d.plan(m, atomic=false).accepted.map(r => r.id), [2])
+  assert_eq(d.plan(m, all_or_nothing=false).accepted.map(r => r.id), [2])
 }
 
 ///|

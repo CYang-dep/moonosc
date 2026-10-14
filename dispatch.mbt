@@ -112,7 +112,7 @@ pub fn Dispatcher::add(
 pub fn Dispatcher::plan(
   self : Dispatcher,
   message : Message,
-  atomic? : Bool = true,
+  all_or_nothing? : Bool = true,
   work_limit? : Int = 1000000,
   limits? : Limits = Limits::default(),
 ) -> DispatchPlan raise OscError {
@@ -135,7 +135,7 @@ pub fn Dispatcher::plan(
       _ => accepted.push(route)
     }
   }
-  if atomic && !rejected.is_empty() {
+  if all_or_nothing && !rejected.is_empty() {
     accepted.clear()
   }
   { accepted, rejected, }
