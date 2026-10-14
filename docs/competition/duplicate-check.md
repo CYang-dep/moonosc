@@ -103,3 +103,13 @@ clock synchronization and hard realtime are deliberately absent.
 Conclusion: this scope passes the recorded semantic gate, with real rejected domains
 and source-level adjacency analysis. It is not a claim of firstness, exclusivity or an
 exhaustive ecosystem census. New evidence can change the assessment.
+
+## Participant's existing public projects
+
+Read-only account-bound inspection of CYang-dep's five public READMEs found:
+moonfitparse (Garmin FIT activities), moonfuse (Linux FUSE requests), moonrestrict
+(DNA restriction-cut geometry), moonsmb (SMB file-sharing messages), and regomoon
+(Rego policy evaluation). None is an OSC control engine. Shared codec/parser/dispatch
+techniques do not establish the same central workflows or data model. Their recorded
+version/development statuses were not presented as blanket completed deliveries.
+No changes were made to these projects or to their identities.
