@@ -8,29 +8,29 @@ fn spend(work : Ref[Int], limit : Int) -> Unit raise OscError {
 
 ///|
 /// Dynamic programming, no recursive backtracking; wildcard never crosses '/'.
-pub fn Pattern::matches(
+fn Pattern::match_budget(
   self : Pattern,
-  method : String,
-  work_limit? : Int = 1000000,
+  path : String,
+  work_limit : Int,
+  work : Ref[Int],
 ) -> Bool raise OscError {
-  validate_method(method)
-  if method.length() > 4096 {
-    raise Limit("method length")
+  validate_method(path)
+  if path.length() > 4096 {
+    raise Limit("path length")
   }
   if work_limit < 1 || work_limit > 16777216 {
     raise Limit("work_limit must be 1..16777216")
   }
-  let n = method.length()
+  let n = path.length()
   let mut current = Array::make(n + 1, false)
   current[0] = true
-  let work = Ref(0)
   for atom in self.atoms {
     let next = Array::make(n + 1, false)
     match atom {
       Star =>
         for j in 0..<(n + 1) {
           spend(work, work_limit)
-          next[j] = current[j] || (j > 0 && next[j - 1] && method[j - 1] != 47)
+          next[j] = current[j] || (j > 0 && next[j - 1] && path[j - 1] != 47)
         }
       Choices(words) =>
         for j in 0..<(n + 1) {
@@ -45,7 +45,7 @@ pub fn Pattern::matches(
             let mut equal = true
             for k in 0..<word.length() {
               spend(work, work_limit)
-              if word[k] != method[j + k] {
+              if word[k] != path[j + k] {
                 equal = false
                 break
               }
@@ -61,7 +61,7 @@ pub fn Pattern::matches(
           if !current[j - 1] {
             continue
           }
-          let c = method[j - 1].to_int()
+          let c = path[j - 1].to_int()
           let matched = match atom {
             Literal(v) => v == c
             Any => c != 47
@@ -89,8 +89,17 @@ pub fn Pattern::matches(
 ///|
 pub fn matches(
   pattern : String,
-  method : String,
+  path : String,
   work_limit? : Int = 1000000,
 ) -> Bool raise OscError {
-  compile_pattern(pattern).matches(method, work_limit~)
+  compile_pattern(pattern).matches(path, work_limit~)
+}
+
+///|
+pub fn Pattern::matches(
+  self : Pattern,
+  path : String,
+  work_limit? : Int = 1000000,
+) -> Bool raise OscError {
+  self.match_budget(path, work_limit, Ref(0))
 }
