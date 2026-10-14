@@ -1,25 +1,16 @@
 ///|
-fn decode_message_reader(r : Reader, limits : Limits) -> Message raise OscError {
+fn decode_message_reader(
+  r : Reader,
+  limits : Limits,
+  budget : Budget,
+) -> Message raise OscError {
   let address = r.text(limits)
   validate_address(address)
   let tags = r.text(limits)
   if tags.length() == 0 || tags[0] != 44 {
     raise Invalid("missing type-tag comma", r.pos)
   }
-  if tags.length() - 1 > limits.arguments {
-    raise Limit("arguments")
-  }
-  let arguments : Array[Argument] = []
-  for i in 1..<tags.length() {
-    let arg = match tags[i].to_int() {
-      105 => I32(r.word().reinterpret_as_int())
-      102 => F32(r.word())
-      115 => Text(r.text(limits))
-      98 => Blob(r.blob(limits))
-      _ => raise Invalid("unsupported type tag", i)
-    }
-    arguments.push(arg)
-  }
+  let arguments = read_arguments(r, tags, Ref::new(1), 1, limits, budget, false)
   if r.pos != r.end {
     raise Invalid("trailing message bytes", r.pos)
   }
@@ -41,5 +32,6 @@ pub fn decode_message(
   decode_message_reader(
     Reader::{ data: bytes, pos: 0, end: bytes.length(), },
     limits,
+    Budget::{ args: 0, nodes: 0, },
   )
 }
