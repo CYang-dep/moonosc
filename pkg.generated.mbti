@@ -12,11 +12,15 @@ pub fn decode(Bytes, limits? : Limits) -> Packet raise OscError
 
 pub fn decode_message(Bytes, limits? : Limits) -> Message raise OscError
 
+pub fn decode_osc10(Bytes, limits? : Limits) -> Packet raise OscError
+
 pub fn double_argument(Double) -> Argument
 
 pub fn encode(Packet, limits? : Limits) -> Bytes raise OscError
 
 pub fn encode_message(Message, limits? : Limits) -> Bytes raise OscError
+
+pub fn encode_osc10(Packet, limits? : Limits) -> Bytes raise OscError
 
 pub fn flatten(Packet, TimeTag, limits? : Limits) -> Array[TimedMessage] raise OscError
 
@@ -31,6 +35,8 @@ pub fn hex_encode(Bytes, max_bytes? : Int) -> String raise OscError
 pub fn matches(String, String, work_limit? : Int) -> Bool raise OscError
 
 pub fn parse_json(String, limits? : Limits) -> Packet raise OscError
+
+pub fn plan_osc10(Packet, TimeTag, limits? : Limits) -> Array[Osc10Batch] raise OscError
 
 pub fn size_frame(Bytes, max_frame? : Int) -> Bytes raise OscError
 
@@ -113,6 +119,25 @@ pub fn Message::not_equal(Self, Self) -> Bool
 pub fn Message::to_repr(Self) -> @debug.Repr
 pub fn Message::type_tags(Self, limits? : Limits) -> String raise OscError
 
+pub(all) struct Osc10Batch {
+  due : TimeTag
+  messages : Array[Message]
+} derive(Eq, @debug.Debug)
+pub fn Osc10Batch::equal(Self, Self) -> Bool
+pub fn Osc10Batch::not_equal(Self, Self) -> Bool
+pub fn Osc10Batch::to_repr(Self) -> @debug.Repr
+
+pub struct Osc10Scheduler {
+  // private fields
+}
+pub fn Osc10Scheduler::cancel(Self, UInt64) -> Bool
+pub fn Osc10Scheduler::clear(Self) -> Int
+pub fn Osc10Scheduler::enqueue(Self, Packet, TimeTag, limits? : Limits) -> Array[UInt64] raise OscError
+pub fn Osc10Scheduler::len(Self) -> Int
+pub fn Osc10Scheduler::new(capacity? : Int) -> Self raise OscError
+pub fn Osc10Scheduler::next_due(Self) -> TimeTag?
+pub fn Osc10Scheduler::poll(Self, TimeTag, max_batches? : Int) -> Array[ScheduledOsc10Batch] raise OscError
+
 pub(all) enum Packet {
   Message(Message)
   Bundle(TimeTag, Array[Packet])
@@ -175,6 +200,15 @@ pub(all) struct Scheduled {
 pub fn Scheduled::equal(Self, Self) -> Bool
 pub fn Scheduled::not_equal(Self, Self) -> Bool
 pub fn Scheduled::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ScheduledOsc10Batch {
+  ticket : UInt64
+  due : TimeTag
+  messages : Array[Message]
+} derive(Eq, @debug.Debug)
+pub fn ScheduledOsc10Batch::equal(Self, Self) -> Bool
+pub fn ScheduledOsc10Batch::not_equal(Self, Self) -> Bool
+pub fn ScheduledOsc10Batch::to_repr(Self) -> @debug.Repr
 
 pub struct Scheduler {
   // private fields
