@@ -62,6 +62,7 @@ test "OSC10 every normative wildcard form and literal brace semantics" {
       ("/a/?", "/a/x", "/a/xy"),
       ("/a/x*", "/a/x", "/a/y"),
       ("/a/[abc]", "/a/b", "/a/d"),
+      ("/a/[[a]", "/a/a", "/a/b"),
       ("/a/[a-c]", "/a/c", "/a/d"),
       ("/a/[!a-c]", "/a/z", "/a/b"),
       ("/a/[a-]", "/a/-", "/a/b"),

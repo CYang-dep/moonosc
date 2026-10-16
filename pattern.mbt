@@ -33,7 +33,7 @@ fn parse_class(
   while cursor.val < text.length() && text[cursor.val] != 93 {
     let lo = text[cursor.val].to_int()
     cursor.val += 1
-    if lo == 47 || lo == 91 {
+    if lo == 47 {
       raise Invalid("illegal class character", cursor.val - 1)
     }
     let mut hi = lo
