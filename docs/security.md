@@ -30,3 +30,22 @@ silently skipped. No recursive descendant wildcard, sockets or Unicode extension
 Core 20260920 marks the JSON parser nesting-bound parameter deprecated without a
 replacement; the single parse_json call locally suppresses that deprecation to keep
 the safety cap. No broad warnings are suppressed. CI exercises this supported call.
+
+## Strict profile and batch resource accounting
+
+Use strict APIs for the [OSC 1.0 core profile](osc-1.0-conformance.md). Wire-only
+decode does not check pattern syntax or child-time relations. Strict admission does;
+it rejects optional tags, recursive // and raw child times earlier than the parent.
+Malformed wire and missing tags fail closed; no heuristic legacy decoding.
+
+Osc10Scheduler defaults to 4096 batches, maximum 65536, not that many messages.
+Each admitted packet is individually limited by Limits (default 4096 packet nodes).
+Across many admissions, pending message storage can therefore approach capacity times
+the per-packet node budget, plus argument/blob storage; there is no independent
+queue-wide byte cap. Select small capacity and per-packet limits, enforce host-wide
+memory/rate budgets, and drain regularly. Queue selection is O(n), poll O(k*n), not
+hard-real-time. Generic Scheduler capacity instead counts single messages.
+
+Atomicity means noninterleaved host method execution, not database transactions or
+rollback of application side effects. Prepare dispatch plans before executing a
+batch, handle errors explicitly, and never await/interleave inside that batch.

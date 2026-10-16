@@ -34,3 +34,19 @@ may be Unicode, but non-ASCII OSC fields are rejected.
 
 No global clock, IO, callbacks, FFI, hidden caches or participant credentials are
 part of the module. Scheduler/framer instances are mutable, single-owner objects.
+
+## OSC 1.0 strict profile (0.2.0)
+
+See [normative map](osc-1.0-conformance.md). encode_osc10/decode_osc10 validate all
+wire budgets, address syntax, core-only tags and raw parent/child time ordering.
+plan_osc10 snapshots through bounded encoding/decoding before traversal. Each bundle's
+direct messages are collected in wire order into one batch; nested bundles form
+separate batches. Empty bundles emit none. Parent direct batch precedes nested
+batches in planning order; the scheduler chooses due bits then ticket across groups.
+
+Osc10Scheduler uses a bounded array, NOT the generic Scheduler heap. Admission is
+transactional across all planned batches. Earliest selection/cancellation is O(n);
+polling k batches is O(k*n) including array removal. This favors explicit,
+reviewable atomic boundaries, not a throughput claim. Capacity is in batches; the
+host executes each transferred batch without unrelated processing. The old flatten /
+Scheduler remain compatibility per-message APIs and cannot supply this guarantee.

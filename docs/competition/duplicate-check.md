@@ -113,3 +113,14 @@ moonfitparse (Garmin FIT activities), moonfuse (Linux FUSE requests), moonrestri
 techniques do not establish the same central workflows or data model. Their recorded
 version/development statuses were not presented as blanket completed deliveries.
 No changes were made to these projects or to their identities.
+
+## 0.2.0 bounded reverse check — 2026-10-16
+
+This is a revision of the same registered MoonOSC capability, not a new candidate.
+The permanent registry's full MoonOSC fingerprint and prior inspected comparisons
+were re-read. Current GitHub code queries Osc10Scheduler and timetag (MoonBit,
+excluding this repository for the latter) returned zero indexed results. MoonCakes
+Open Sound Control (limit 100) returned three modules: this project's 0.1.0 plus
+previously inspected colmugx/ai-passport and bobzhang/games. No new direct competitor
+was exposed by these bounded queries; the 2026-10-14 source-level comparisons and
+index limitations still apply. No claim of exhaustive uniqueness is made.

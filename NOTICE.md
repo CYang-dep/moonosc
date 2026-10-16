@@ -8,11 +8,12 @@ No vendor or upstream implementation source is incorporated.
 
 Behavioral references:
 - Open Sound Control 1.0: https://opensoundcontrol.stanford.edu/spec-1_0.html
-- OSC 1.1 page (limited available content): https://opensoundcontrol.stanford.edu/spec-1_1.html
 - RFC 1055 SLIP: https://www.rfc-editor.org/rfc/rfc1055
 
-Extended type tags and ASCII-only limits are explicit; this is not an exhaustive
-OSC 1.1 conformance claim. Protocol definitions inform independently written code
+Normative target for 0.2.0: OSC 1.0 dated 26 March 2002; see
+ docs/osc-1.0-conformance.md for mandatory semantics, optional tags, permanent
+ exclusions and host responsibilities. Optional tags are from OSC 1.0 itself.
+ There is no OSC 1.1 or complete-server conformance claim. Protocol definitions inform independently written code
 and tests. The Python reference encoder uses only struct and bytes, not an imported
 OSC implementation. Adjacent sources were read for scope comparison only, not copied
 or ported. See docs/competition/duplicate-check.md.

@@ -31,11 +31,12 @@ jobs:
           moon check --deny-warn --target ${{ matrix.target }}
           moon test --deny-warn --target ${{ matrix.target }}
           moon build --deny-warn --target ${{ matrix.target }}
-      - name: Run three integrations
+      - name: Run integrations and OSC 1.0 conformance cases
         run: |
           moon run examples/audio --target ${{ matrix.target }}
           moon run examples/media --target ${{ matrix.target }}
           moon run examples/device --target ${{ matrix.target }}
+          moon run examples/conformance --target ${{ matrix.target }}
       - name: Independent wire oracle and source audit
         run: |
           python3 scripts/reference_vectors.py --target ${{ matrix.target }}
