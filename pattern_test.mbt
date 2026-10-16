@@ -7,10 +7,7 @@ test "compile supported OSC pattern grammar" {
 
 ///|
 test "reject malformed and unsupported pattern constructs" {
-  for
-    text in [
-      "/a/[", "/a/[]", "/a/[z-a]", "/a/{x,}", "/a/{x", "/a/}", "/a/{*}", "/a/{x/y}",
-    ] {
+  for text in ["/a/[", "/a/[]", "/a/[z-a]", "/a/{x", "/a/}", "/a/{x/y}"] {
     assert_true(
       try {
         ignore(@moonosc.compile_pattern(text))

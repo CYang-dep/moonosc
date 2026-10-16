@@ -76,6 +76,7 @@ pub fn Router::resolve(
   address : String,
   work_limit~ : Int32 = 1000000,
 ) -> Array[Route] raise OscError {
+  validate_work_limit(work_limit)
   let pattern = compile_pattern(address)
   let work = Ref(0)
   let out : Array[Route] = []

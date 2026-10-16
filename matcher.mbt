@@ -1,4 +1,11 @@
 ///|
+fn validate_work_limit(work_limit : Int32) -> Unit raise OscError {
+  if work_limit < 1 || work_limit > 16777216 {
+    raise Limit("work_limit must be 1..16777216")
+  }
+}
+
+///|
 fn spend(work : Ref[Int32], limit : Int32) -> Unit raise OscError {
   if work.val >= limit {
     raise Limit("pattern work budget")
@@ -18,9 +25,7 @@ fn Pattern::match_budget(
   if path.length() > 4096 {
     raise Limit("path length")
   }
-  if work_limit < 1 || work_limit > 16777216 {
-    raise Limit("work_limit must be 1..16777216")
-  }
+  validate_work_limit(work_limit)
   let n = path.length()
   let mut current = Array::make(n + 1, false)
   current[0] = true
@@ -39,6 +44,7 @@ fn Pattern::match_budget(
             continue
           }
           for word in words {
+            spend(work, work_limit)
             if word.length() > n - j {
               continue
             }

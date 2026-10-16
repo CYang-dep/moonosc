@@ -68,9 +68,6 @@ fn parse_choices(
     let c = text[cursor.val].to_int()
     cursor.val += 1
     if c == 44 || c == 125 {
-      if word.is_empty() {
-        raise Invalid("empty brace alternative", cursor.val - 1)
-      }
       choices.push(String::from_array(word[:]))
       word.clear()
       if c == 125 {
@@ -78,9 +75,9 @@ fn parse_choices(
       }
     } else {
       match c {
-        47 | 42 | 63 | 91 | 93 | 123 =>
+        47 | 123 =>
           raise Invalid(
-            "brace alternatives must be literal segment strings",
+            "brace alternatives cannot cross segments or nest",
             cursor.val - 1,
           )
         _ => word.push(c.to_char().unwrap())
